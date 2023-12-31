@@ -55,6 +55,7 @@ static void clipcopy(const Arg *);
 static void clippaste(const Arg *);
 static void numlock(const Arg *);
 static void selpaste(const Arg *);
+static void changealpha(const Arg *);
 static void zoom(const Arg *);
 static void zoomabs(const Arg *);
 static void zoomreset(const Arg *);
@@ -293,6 +294,18 @@ void
 numlock(const Arg *dummy)
 {
 	win.mode ^= MODE_NUMLOCK;
+}
+
+void
+changealpha(const Arg *arg)
+{
+	alpha += arg->f;
+	LIMIT(alpha, 0, 1);
+
+	dc.col[defaultbg].color.alpha = (unsigned short)(0xffff * alpha);
+	/* Required to remove artifacting from borderpx */
+	cresize(0, 0);
+	redraw();
 }
 
 void
